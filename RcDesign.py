@@ -64,9 +64,11 @@ class MomentCalculate:
     def __rebars(self):
         rebars = []
         for bar in self.__topBars:
-            rebars.append({"area": bar.areas, "yi": +(self.__sec.height / 2 - bar.dT)})
+            rebars.append({"area": bar.areas, "yi": +
+                          (self.__sec.height / 2 - bar.dT)})
         for bar in self.__botBars:
-            rebars.append({"area": bar.areas, "yi": -(self.__sec.height / 2 - bar.dB)})
+            rebars.append({"area": bar.areas, "yi": -
+                          (self.__sec.height / 2 - bar.dB)})
         return rebars
 
     def __neutral_axis_depth(self):
@@ -80,11 +82,13 @@ class MomentCalculate:
             Tsi = 0  # 鋼筋合力
             asc = 0  # 混凝土壓力區內之鋼筋面積
             for rebar in self.__rebars:
-                epsilon_si = self.__epsilon_c * (self.__sec.height / 2 - rebar["yi"] - ci) / ci
+                epsilon_si = self.__epsilon_c * \
+                    (self.__sec.height / 2 - rebar["yi"] - ci) / ci
                 Tsi += - self.__fs(epsilon_si) * rebar["area"]
                 if self.__sec.height / 2 - rebar["yi"] < ai:
                     asc += rebar["area"]
-            Cci = 0.85 * self.__mat.fc * (self.__beta1() * ci * self.__sec.width - asc)
+            Cci = 0.85 * self.__mat.fc * \
+                (self.__beta1() * ci * self.__sec.width - asc)
             Fi = Cci + Tsi
             # print(f"ci={ci:10.3f}, Cci={Cci/1000:10.3f}, Tsi={Tsi/1000:10.3f}, Fi={Fi/1000:10.3f}")
             if Fi > 0:
@@ -108,7 +112,8 @@ class MomentCalculate:
         Ms = 0  # 鋼筋彎矩
         asc = 0  # 混凝土壓力區內之鋼筋面積
         for rebar in self.__rebars:
-            ellipsis_si = self.__epsilon_c * (self.__sec.height / 2 - rebar["yi"] - c) / c
+            ellipsis_si = self.__epsilon_c * \
+                (self.__sec.height / 2 - rebar["yi"] - c) / c
             fsi = - self.__fs(ellipsis_si)
             Ps += fsi * rebar["area"]
             Ms += fsi * rebar['area'] * rebar["yi"]
@@ -116,7 +121,8 @@ class MomentCalculate:
                 asc += rebar['area']
 
         rebars_lowest = min(rebar["yi"] for rebar in self.__rebars)
-        ellipsis_st = self.__epsilon_c * (self.__sec.height / 2 - rebars_lowest - c) / c
+        ellipsis_st = self.__epsilon_c * \
+            (self.__sec.height / 2 - rebars_lowest - c) / c
         phi: float = self.__factor_phi(ellipsis_st)
 
         # concrete_force
@@ -188,11 +194,13 @@ class ShearCalculate:
         elif self.__phi * self.__Vc() < abs(self.__Vu) \
                 <= self.__phi * (self.__Vc() + 2.12 * self.__mat.fc ** 0.5 * self.__sec.width * self.__d):
             str_msg = "Stirrup is required"
-            Av_spacing_req = max(self.__Vs_req() / (self.__mat.fys * self.__d), Av_spacing_min)
+            Av_spacing_req = max(
+                self.__Vs_req() / (self.__mat.fys * self.__d), Av_spacing_min)
 
         else:
             str_msg = "Need change section"
-            Av_spacing_req = max(self.__Vs_req() / (self.__mat.fys * self.__d), Av_spacing_min)
+            Av_spacing_req = max(
+                self.__Vs_req() / (self.__mat.fys * self.__d), Av_spacing_min)
         return str_msg, Av_spacing_req
 
     def __max_spacing(self):
@@ -254,16 +262,6 @@ shear_cal.result()
 ret = phiVn(sec, mat, stirrup, dB=5)
 print(f"phiVn= {ret / 1000:.3f} tf")
 
-# 彎矩計算
-M_u = 20 * 100000  # kgf-cm
-top_bars = [TopBar(0, "D22", 6)]
-bot_bars = [BotBar(4, "D22", 6), BotBar(4, "D22", 11)]
-moment_cal = MomentCalculate(sec, mat, top_bars, bot_bars, M_u)
-moment_cal.result()
-#
-ret = phiMn(sec, mat, top_bars, bot_bars)
-print(f"phiMn= {ret / 100000:.3f} tf-m")
-
 
 # --------------------------------------
 def step(t, a):
@@ -296,7 +294,10 @@ def envelope(*items):
     return x, y
 
 
-moments = [mx(0, 1, 10), mx(0.2, 0.8, 5)]
+# 彎矩計算
+phiMn1 = phiMn(sec, mat, [TopBar(0, "D22", 6)], [BotBar(4, "D22", 6), BotBar(4, "D22", 11)])
+phiMn2 = phiMn(sec, mat, [TopBar(0, "D22", 6)], [BotBar(4, "D22", 6), BotBar(4, "D22", 11)])
+moments = [mx(0, 1, phiMn1/100000), mx(0.2, 0.8, phiMn1/100000)]
 xm, ym = envelope(*moments)
 
 fig, ax = plt.subplots()
