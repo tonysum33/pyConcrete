@@ -297,10 +297,10 @@ def envelope(*items):
 
 
 moments = [mx(0, 1, 10), mx(0.2, 0.8, 5)]
-x, y = envelope(*moments)
+xm, ym = envelope(*moments)
 
 fig, ax = plt.subplots()
-ax.plot(x, y, color='red', linestyle="--")
+ax.plot(xm, ym, color='red', linestyle="--")
 ax.set_xlabel('x')
 ax.set_ylabel('Moment (t-m)')
 plt.show()
