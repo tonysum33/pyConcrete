@@ -254,8 +254,6 @@ sec = Section(width=40, height=60)
 mat = Material(fc=280, fyb=4200, fys=4200)
 
 
-
-
 # --------------------------------------
 def step(t, a):
     if t < a:
