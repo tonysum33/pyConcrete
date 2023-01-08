@@ -264,38 +264,43 @@ moment_cal.result()
 ret = phiMn(sec, mat, top_bars, bot_bars)
 print(f"phiMn= {ret / 100000:.3f} tf-m")
 
+
 # --------------------------------------
 def step(t, a):
     if t < a:
         return 0
     else:
-        return 1            
+        return 1
+
 
 def pulse(t, s, e, scale):
     return scale * (step(t, s) - step(t, e))
 
+
 class mx:
-    def __init__(self,p1,p2,s):
+    def __init__(self, p1, p2, s):
         self.p1 = p1
         self.p2 = p2
         self.s = s
-        
+
+
 def envelope(*items):
     pt1 = min([i.p1 for i in items])
     pt2 = max([i.p2 for i in items])
     num = 500
     x = np.linspace(pt1, pt2, num)
-    x = np.delete(x,-1)
-    y = np.zeros(num-1)
+    x = np.delete(x, -1)
+    y = np.zeros(num - 1)
     for item in items:
-        y += np.array([pulse(i,item.p1,item.p2,item.s) for i in x]) 
-    return x,y
-    
-moments =[mx(0,1,10),mx(0.2,0.8,5)]
-x,y = envelope(*moments)
+        y += np.array([pulse(i, item.p1, item.p2, item.s) for i in x])
+    return x, y
+
+
+moments = [mx(0, 1, 10), mx(0.2, 0.8, 5)]
+x, y = envelope(*moments)
 
 fig, ax = plt.subplots()
-ax.plot(x, y,  color='red', linestyle="--")
+ax.plot(x, y, color='red', linestyle="--")
 ax.set_xlabel('x')
 ax.set_ylabel('Moment (t-m)')
 plt.show()
