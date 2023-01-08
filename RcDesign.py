@@ -284,6 +284,7 @@ def envelope(*items):
         y += np.array([pulse(i, item.p1, item.p2, item.s) for i in x])
     return x, y
 
+
 # 剪力計算
 phiVn1 = phiVn(sec, mat, Stirrup(n_leg=2, size="D13", spacing=20), dB=5)
 phiVn2 = phiVn(sec, mat, Stirrup(n_leg=2, size="D13", spacing=20), dB=5)
