@@ -31,6 +31,7 @@ class TopBar(Rebar):
         self.dT = dT
         self.areas = self.n * self.area
 
+
 class BotBar(Rebar):
     def __init__(self, qty, size, dB):
         super().__init__(size)
