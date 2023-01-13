@@ -285,27 +285,30 @@ def envelope(*items):
     return x, y
 
 
-# 剪力計算
-phiVn1 = phiVn(sec, mat, Stirrup(n_leg=2, size="D13", spacing=20), dB=5)
-phiVn2 = phiVn(sec, mat, Stirrup(n_leg=2, size="D13", spacing=20), dB=5)
-shears = [mx(0.0, 0.3, phiVn1/100), mx(0.7, 1.0, phiVn2/100)]
-xv, yv = envelope(*shears)
-# 彎矩計算
-phiMn1 = phiMn(sec, mat, [TopBar(0, "D22", 6)], [BotBar(4, "D22", 6), BotBar(4, "D22", 11)])
-phiMn2 = phiMn(sec, mat, [TopBar(0, "D22", 6)], [BotBar(4, "D22", 6), BotBar(4, "D22", 11)])
-moments = [mx(0.0, 1.0, phiMn1/100000), mx(0.2, 0.8, phiMn1/100000)]
-xm, ym = envelope(*moments)
+if __name__ == '__main__':
+    # 剪力計算
+    phiVn1 = phiVn(sec, mat, Stirrup(n_leg=2, size="D13", spacing=20), dB=5)
+    phiVn2 = phiVn(sec, mat, Stirrup(n_leg=2, size="D13", spacing=20), dB=5)
+    shears = [mx(0.0, 0.3, phiVn1/100), mx(0.7, 1.0, phiVn2/100)]
+    xv, yv = envelope(*shears)
+    # 彎矩計算
+    phiMn1 = phiMn(sec, mat, [TopBar(0, "D22", 6)], [BotBar(4, "D22", 6), BotBar(4, "D22", 11)])
+    phiMn2 = phiMn(sec, mat, [TopBar(0, "D22", 6)], [BotBar(4, "D22", 6), BotBar(4, "D22", 11)])
+    moments = [mx(0.0, 1.0, phiMn1/100000), mx(0.2, 0.8, phiMn1/100000)]
+    xm, ym = envelope(*moments)
 
-# 繪圖
-fig, (ax1, ax2) = plt.subplots(2, 1)
-plt.subplots_adjust(hspace=0.5)
-ax1.plot(xm, ym, color='red', linestyle="--")
-ax1.set_xlabel('END ij')
-ax1.set_ylabel('MOMENT (tf-m)')
-ax1.grid()
-#
-ax2.plot(xv, yv, color='red', linestyle="--")
-ax2.set_xlabel('END ij')
-ax2.set_ylabel('SHEAR (tf)')
-ax2.grid()
-plt.show()
+    # 繪圖
+    fig, (ax1, ax2) = plt.subplots(2, 1)
+    plt.subplots_adjust(hspace=0.5)
+    ax1.plot(xm, ym, color='red', linestyle="--")
+    ax1.set_xlabel('END ij')
+    ax1.set_ylabel('MOMENT (tf-m)')
+    ax1.grid()
+    #
+    ax2.plot(xv, yv, color='red', linestyle="--")
+    ax2.set_xlabel('END ij')
+    ax2.set_ylabel('SHEAR (tf)')
+    ax2.grid()
+    plt.show()
+
+
